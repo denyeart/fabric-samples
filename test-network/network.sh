@@ -61,7 +61,16 @@ NONWORKING_VERSIONS="^1\.0\. ^1\.1\. ^1\.2\. ^1\.3\. ^1\.4\."
 # of go or other items could be added.
 function checkPrereqs() {
   ## Check if your have cloned the peer binaries and configuration files.
+  set -x
   peer version > /dev/null 2>&1
+
+if [[ $? -ne 0 ]]; then
+  errorln "=== peer version command failed"
+fi
+
+if [[ ! -d "../config" ]]; then
+  errorln "=== no config directory"
+fi
 
   if [[ $? -ne 0 || ! -d "../config" ]]; then
     errorln "Peer binary and configuration files not found.."
@@ -283,6 +292,7 @@ function createOrgs() {
 function networkUp() {
 
   checkPrereqs
+  #echo "=== Skipping checkPrereqs"
 
   # generate artifacts if they don't exist
   if [ ! -d "organizations/peerOrganizations" ]; then
